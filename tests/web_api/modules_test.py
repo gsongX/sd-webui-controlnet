@@ -6,6 +6,11 @@ from .template import APITestTemplate
 
 expected_module_names = {
     "animal_openpose",
+    "dw_openpose_body",
+    "dw_openpose_body2",
+    "dw_openpose_mnc",
+    "dw_openpose_half_body_with_arm",
+    "dw_openpose_half_body_without_arm",
     "anime_face_segment",
     "blur_gaussian",
     "canny",
@@ -77,6 +82,11 @@ expected_module_names = {
 # Display name (label)
 expected_module_alias = {
     "animal_openpose",
+    "dw_openpose_body",
+    "dw_openpose_body2",
+    "dw_openpose_mnc",
+    "dw_openpose_half_body_with_arm",
+    "dw_openpose_half_body_without_arm",
     "blur_gaussian",
     "canny",
     "densepose (pruple bg & purple torso)",

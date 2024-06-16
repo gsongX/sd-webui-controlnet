@@ -21,6 +21,7 @@ from scripts.supported_preprocessor import Preprocessor
 from annotator.openpose import draw_poses, decode_json_as_poses
 from annotator.openpose.animalpose import draw_animalposes
 
+import time
 
 def encode_to_base64(image):
     if isinstance(image, str):
@@ -108,6 +109,8 @@ def controlnet_api(_: gr.Blocks, app: FastAPI):
         controlnet_masks: List[str] = Body([], title="Controlnet Masks"),
         low_vram: bool = Body(False, title="Low vram"),
     ):
+        logger.info(f"===== API /controlnet/detect start =====")
+        start_time = time.time()
         preprocessor = Preprocessor.get_preprocessor(controlnet_module)
 
         if preprocessor is None:
@@ -197,6 +200,7 @@ def controlnet_api(_: gr.Blocks, app: FastAPI):
         if tensors:
             res["tensor"] = tensors
 
+        logger.info("===== API /controlnet/detect end in {:.3f} seconds =====".format(time.time() - start_time))
         return res
 
     class Person(BaseModel):

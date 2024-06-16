@@ -278,12 +278,14 @@ class OpenposeModel(object):
             include_face=include_face,
             use_dw_pose=use_dw_pose,
             use_animal_pose=use_animal_pose,
-            json_pose_callback=json_pose_callback
+            json_pose_callback=json_pose_callback,
+            **kwargs,
         )), True
 
     def unload(self):
-        if self.model_openpose is not None:
-            self.model_openpose.unload_model()
+        logger.debug("Not unloading Openpose model.")
+        # if self.model_openpose is not None:
+        #     self.model_openpose.unload_model()
 
 
 g_openpose_model = OpenposeModel()
@@ -382,6 +384,10 @@ def unload_clip(config='clip_vitl'):
     if clip_encoder[config] is not None:
         clip_encoder[config].unload_model()
         clip_encoder[config] = None
+
+
+def not_unload_clip(config='clip_vitl'):
+    logger.debug(f"Not unload CLIP with config: {config}")
 
 
 model_color = None

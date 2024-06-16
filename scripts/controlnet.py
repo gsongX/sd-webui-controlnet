@@ -428,14 +428,20 @@ class Script(scripts.Script, metaclass=(
                 return control_model
 
         # Remove model from cache to clear space before building another model
-        if len(Script.model_cache) > 0 and len(Script.model_cache) >= shared.opts.data.get("control_net_model_cache_size", 2):
-            Script.model_cache.popitem(last=False)
-            gc.collect()
-            devices.torch_gc()
+        # if len(Script.model_cache) > 0 and len(Script.model_cache) >= shared.opts.data.get("control_net_model_cache_size", 3):
+        #     Script.model_cache.popitem(last=False)
+        #     gc.collect()
+        #     devices.torch_gc()
 
         control_model = Script.build_control_model(p, unet, model)
 
-        if shared.opts.data.get("control_net_model_cache_size", 2) > 0:
+        is_cache = False
+        for i in shared.opts.data.get("control_net_model_cache_items", "").split(","):
+            if i in str(model):
+                is_cache = True
+                break
+        if is_cache:
+            logger.warning(f"controlnet cached model: {model}")
             Script.model_cache[model] = control_model
 
         return control_model
@@ -461,10 +467,12 @@ class Script(scripts.Script, metaclass=(
             raise ValueError(f"file not found: {model_path}")
 
         logger.info(f"Loading model: {model}")
+        t = time.time()
+
         state_dict = load_state_dict(model_path)
         control_model = build_model_by_guess(state_dict, unet, model_path)
         control_model.model.to('cpu', dtype=p.sd_model.dtype)
-        logger.info(f"ControlNet model {model}({control_model.type}) loaded.")
+        logger.info("ControlNet model {} type {} loaded in {:.3f} second.".format(model, control_model.type, time.time() - t))
         return control_model
 
     @staticmethod
@@ -881,8 +889,8 @@ class Script(scripts.Script, metaclass=(
         post_processors = []
 
         # cache stuff
-        if self.latest_model_hash != p.sd_model.sd_model_hash:
-            Script.clear_control_model_cache()
+        # if self.latest_model_hash != p.sd_model.sd_model_hash:
+        #     Script.clear_control_model_cache()
 
         self.latest_model_hash = p.sd_model.sd_model_hash
 
@@ -1360,7 +1368,10 @@ def on_ui_settings():
     shared.opts.add_option("control_net_unit_count", shared.OptionInfo(
         3, "Multi-ControlNet: ControlNet unit number", gr.Slider, {"minimum": 1, "maximum": 10, "step": 1}, section=section).needs_reload_ui())
     shared.opts.add_option("control_net_model_cache_size", shared.OptionInfo(
-        2, "Model cache size", gr.Slider, {"minimum": 1, "maximum": 10, "step": 1}, section=section).needs_reload_ui())
+        3, "Model cache size", gr.Slider, {"minimum": 1, "maximum": 10, "step": 1}, section=section).needs_reload_ui())
+    shared.opts.add_option("control_net_model_cache_items", shared.OptionInfo(
+        "control_v11p_sd15_openpose,control_v11p_sd15_canny,ip-adapter_sd15_plus",
+        "Model cache items (requires restart)",  gr.Textbox, lambda: { "interactive": False, "visible": True}, section=section))	
     shared.opts.add_option("control_net_inpaint_blur_sigma", shared.OptionInfo(
         7, "ControlNet inpainting Gaussian blur sigma", gr.Slider, {"minimum": 0, "maximum": 64, "step": 1}, section=section))
     shared.opts.add_option("control_net_no_detectmap", shared.OptionInfo(
