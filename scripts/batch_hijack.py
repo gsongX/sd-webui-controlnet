@@ -101,7 +101,8 @@ class BatchHijack:
         return processed
 
     def save_images(self, output_dir, init_image_path, output_images):
-        os.makedirs(output_dir, exist_ok=True)
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir, exist_ok=True)
         for n, processed_image in enumerate(output_images):
             filename = os.path.basename(init_image_path)
 

@@ -300,7 +300,8 @@ if __name__ == "__main__":
     logger = setup_logger(name=__name__)
 
     dirname = "cityscapes-data-vis"
-    os.makedirs(dirname, exist_ok=True)
+    if not os.path.exists(dirname):
+        os.makedirs(dirname, exist_ok=True)
 
     if args.type == "instance":
         dicts = load_cityscapes_instances(

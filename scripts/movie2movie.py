@@ -63,7 +63,8 @@ def save_gif(path, image_list, name, duration):
     for i, image in enumerate(image_list):
         images.save_image(image, tmp_dir, f"output_{i}")
 
-    os.makedirs(f"{path}{_BASEDIR}", exist_ok=True)
+    if not os.path.exists(f"{path}{_BASEDIR}"):
+        os.makedirs(f"{path}{_BASEDIR}", exist_ok=True)
 
     image_list[0].save(f"{path}{_BASEDIR}/{name}.gif", save_all=True, append_images=image_list[1:], optimize=False, duration=duration, loop=0)
     

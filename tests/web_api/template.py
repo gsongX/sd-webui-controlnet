@@ -32,7 +32,8 @@ PayloadOverrideType = Dict[str, Any]
 timestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
 test_result_dir = Path(__file__).parent / "results" / f"test_result_{timestamp}"
 test_expectation_dir = Path(__file__).parent / "expectations"
-os.makedirs(test_expectation_dir, exist_ok=True)
+if not os.path.exists(test_expectation_dir):
+    os.makedirs(test_expectation_dir, exist_ok=True)
 resource_dir = Path(__file__).parents[1] / "images"
 
 

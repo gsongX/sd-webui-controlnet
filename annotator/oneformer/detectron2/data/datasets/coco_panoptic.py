@@ -216,7 +216,8 @@ if __name__ == "__main__":
     logger.info("Done loading {} samples.".format(len(dicts)))
 
     dirname = "coco-data-vis"
-    os.makedirs(dirname, exist_ok=True)
+    if not os.path.exists(dirname):
+        os.makedirs(dirname, exist_ok=True)
     num_imgs_to_vis = int(sys.argv[5])
     for i, d in enumerate(dicts):
         img = np.array(Image.open(d["file_name"]))

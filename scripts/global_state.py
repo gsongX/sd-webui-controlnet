@@ -20,7 +20,8 @@ cn_models_names = {}  # "my_lora" -> "My_Lora(abcd1234)"
 default_detectedmap_dir = os.path.join("detected_maps")
 script_dir = scripts.basedir()
 
-os.makedirs(cn_models_dir, exist_ok=True)
+if not os.path.exists(cn_models_dir):
+    os.makedirs(cn_models_dir, exist_ok=True)
 
 
 def traverse_all_files(curr_path, model_list):

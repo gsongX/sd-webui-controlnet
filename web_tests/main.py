@@ -25,8 +25,10 @@ SKI_IMAGE = os.path.join(CWD, "images/ski.jpg")
 timestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
 test_result_dir = os.path.join("results", f"test_result_{timestamp}")
 test_expectation_dir = "expectations"
-os.makedirs(test_result_dir, exist_ok=True)
-os.makedirs(test_expectation_dir, exist_ok=True)
+if not os.path.exists(test_result_dir):
+    os.makedirs(test_result_dir, exist_ok=True)
+if not os.path.exists(test_expectation_dir):
+    os.makedirs(test_expectation_dir, exist_ok=True)
 driver_path = ChromeDriverManager().install()
 
 

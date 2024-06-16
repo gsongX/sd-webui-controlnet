@@ -232,7 +232,8 @@ if __name__ == "__main__":
     logger.info("Done loading {} samples.".format(len(dicts)))
 
     dirname = "lvis-data-vis"
-    os.makedirs(dirname, exist_ok=True)
+    if not os.path.exists(dirname):
+        os.makedirs(dirname, exist_ok=True)
     for d in dicts[: int(sys.argv[4])]:
         img = np.array(Image.open(d["file_name"]))
         visualizer = Visualizer(img, metadata=meta)

@@ -64,7 +64,8 @@ def run(input_path, output_path, model_path, model_type="large"):
     num_images = len(img_names)
 
     # create output folder
-    os.makedirs(output_path, exist_ok=True)
+    if not os.path.exists(output_path):
+        os.makedirs(output_path, exist_ok=True)
 
     print("start processing")
 

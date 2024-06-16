@@ -120,7 +120,10 @@ def to_base64_nparray(encoding: str) -> np.ndarray:
     Convert a base64 image into the image type the extension uses
     """
 
-    return np.array(api.decode_base64_to_image(encoding)).astype("uint8")
+    pil_img = api.decode_base64_to_image(encoding)
+    if pil_img.format != 'RGB':
+        pil_img = pil_img.convert('RGB')
+    return np.array(pil_img).astype('uint8')
 
 
 def get_all_units_in_processing(

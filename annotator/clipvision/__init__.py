@@ -5,7 +5,7 @@ import numpy as np
 
 from einops import rearrange
 from modules import devices
-from annotator.annotator_path import models_path
+from modules.shared import models_path
 from transformers import CLIPVisionModelWithProjection, CLIPVisionConfig, CLIPImageProcessor
 
 try:
@@ -83,6 +83,8 @@ downloads = {
     'clip_h': 'https://huggingface.co/h94/IP-Adapter/resolve/main/models/image_encoder/pytorch_model.bin'
 }
 
+# 'clip_h': 'https://huggingface.co/h94/IP-Adapter/resolve/main/models/image_encoder/model.safetensors'
+
 
 clip_vision_h_uc = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'clip_vision_h_uc.data')
 clip_vision_h_uc = torch.load(clip_vision_h_uc,  map_location=devices.get_device_for("controlnet") if torch.cuda.is_available() else torch.device('cpu'))['uc']
@@ -102,7 +104,8 @@ class ClipVisionDetector:
             torch.device("cpu") if low_vram else
             devices.get_device_for("controlnet")
         )
-        os.makedirs(self.model_path, exist_ok=True)
+        if not os.path.exists(self.model_path):
+            os.makedirs(self.model_path, exist_ok=True)
         file_path = os.path.join(self.model_path, self.file_name)
         if not os.path.exists(file_path):
             load_file_from_url(url=self.download_link, model_dir=self.model_path, file_name=self.file_name)

@@ -13,7 +13,8 @@ class DirectoryVisualizer(BaseVisualizer):
     def __init__(self, outdir, key_order=DEFAULT_KEY_ORDER, max_items_in_batch=10,
                  last_without_mask=True, rescale_keys=None):
         self.outdir = outdir
-        os.makedirs(self.outdir, exist_ok=True)
+        if not os.path.exists(self.outdir):
+            os.makedirs(self.outdir, exist_ok=True)
         self.key_order = key_order
         self.max_items_in_batch = max_items_in_batch
         self.last_without_mask = last_without_mask
