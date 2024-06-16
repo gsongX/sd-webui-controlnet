@@ -233,7 +233,8 @@ legacy_preprocessors = {
         "slider_3": None,
         "priority": 0,
         "tags": [
-            "OpenPose"
+            "OpenPose",
+            "Segmentation"
         ]
     },
     "densepose_parula": {
@@ -254,7 +255,8 @@ legacy_preprocessors = {
         "slider_3": None,
         "priority": 0,
         "tags": [
-            "OpenPose"
+            "OpenPose",
+            "Segmentation"
         ]
     },
     "depth_anything": {
